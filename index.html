@@ -135,6 +135,20 @@ body {
   min-height: 100dvh;
 }
 
+/* Transisi tema mulus untuk SEMUA elemen */
+.theme-transitioning,
+.theme-transitioning *,
+.theme-transitioning *::before,
+.theme-transitioning *::after {
+  transition:
+    background-color 320ms cubic-bezier(0.16,1,0.3,1),
+    border-color     280ms cubic-bezier(0.16,1,0.3,1),
+    color            240ms cubic-bezier(0.16,1,0.3,1),
+    box-shadow       280ms cubic-bezier(0.16,1,0.3,1),
+    fill             200ms ease,
+    stroke           200ms ease !important;
+}
+
 /* Background texture */
 body::before {
   content:'';
@@ -532,7 +546,14 @@ textarea.field-input { resize:vertical; min-height:90px; }
   vertical-align:top;
   color:var(--text-primary);
   background:var(--surface);
-  transition:background var(--dur-slow), color var(--dur-slow);
+  transition:background var(--dur-slow) var(--ease-out),
+             color var(--dur-slow) var(--ease-out),
+             border-color var(--dur-slow) var(--ease-out);
+}
+/* Override inline bg dari JS render */
+.ikl-table tbody tr td[style*="background:var(--surface)"],
+.ikl-table tbody tr td[style*="background-color:var(--surface)"] {
+  background:var(--surface) !important;
 }
 .ikl-table .row-group-header td {
   background:var(--brand-light)!important;
@@ -551,7 +572,9 @@ textarea.field-input { resize:vertical; min-height:90px; }
   border-radius:var(--r-md);
   padding:14px;
   margin-bottom:8px;
-  transition:background var(--dur-slow), border-color var(--dur-slow), box-shadow var(--dur-fast);
+  transition:background var(--dur-slow) var(--ease-out),
+             border-color var(--dur-slow) var(--ease-out),
+             box-shadow var(--dur-fast);
   animation:cardIn .3s var(--ease-out) both;
 }
 .ikl-card:hover { box-shadow:var(--shadow-sm); border-color:var(--border-strong); }
@@ -588,12 +611,13 @@ textarea.field-input { resize:vertical; min-height:90px; }
   border-bottom:1px dashed var(--border);
 }
 .ikl-card-areas {
-  display:flex; gap:4px; flex-wrap:wrap;
-  justify-content:space-around;
+  display:grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap:6px;
 }
 .ikl-card-area {
   display:flex; flex-direction:column; align-items:center;
-  gap:3px; flex:1; min-width:36px;
+  gap:3px;
 }
 .ikl-card-area-label {
   font-size:10px; font-weight:700;
@@ -941,6 +965,90 @@ textarea.field-input { resize:vertical; min-height:90px; }
   #fixed-score-bar { padding:0; }
   #score-bar-inner { padding:6px 14px 8px; }
   body { padding-bottom:110px; }
+}
+
+
+/* Table cell classes (menggantikan inline style untuk transisi tema mulus) */
+.tbl-cell {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 12px;
+  transition:
+    background-color 320ms cubic-bezier(0.16,1,0.3,1),
+    border-color     280ms cubic-bezier(0.16,1,0.3,1),
+    color            240ms cubic-bezier(0.16,1,0.3,1);
+}
+.tbl-no {
+  padding: 8px 6px;
+  text-align: center;
+  font-weight: 600;
+  color: var(--brand) !important;
+  white-space: nowrap;
+}
+.tbl-text {
+  padding: 8px 6px;
+  line-height: 1.5;
+}
+.tbl-indent { padding-left: 20px !important; }
+.tbl-muted  { color: var(--text-muted) !important; font-size:12px; padding:8px 6px; text-align:center; }
+
+/* Group header rows also transition */
+.ikl-table .row-group-header td {
+  transition:
+    background-color 320ms cubic-bezier(0.16,1,0.3,1),
+    color            240ms cubic-bezier(0.16,1,0.3,1);
+}
+
+/* NA pill transition */
+.na-pill {
+  transition:
+    background-color 320ms cubic-bezier(0.16,1,0.3,1),
+    border-color     280ms cubic-bezier(0.16,1,0.3,1),
+    color            240ms cubic-bezier(0.16,1,0.3,1);
+}
+
+/* Score/special req labels transition */
+.score-label, .special-req-label {
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    border-color     var(--dur-fast) var(--ease-out),
+    color            var(--dur-fast) var(--ease-out),
+    transform        var(--dur-fast) var(--ease-spring),
+    box-shadow       var(--dur-fast);
+}
+
+/* Legend card transition */
+.legend-card {
+  transition:
+    background-color 320ms cubic-bezier(0.16,1,0.3,1),
+    border-color     280ms cubic-bezier(0.16,1,0.3,1);
+}
+
+/* Section card & score display transition */
+.section-card, .score-display {
+  transition:
+    background-color 320ms cubic-bezier(0.16,1,0.3,1),
+    border-color     280ms cubic-bezier(0.16,1,0.3,1),
+    box-shadow       var(--dur-base);
+}
+
+/* Fixed score bar transition */
+#fixed-score-bar {
+  transition:
+    background-color 320ms cubic-bezier(0.16,1,0.3,1),
+    border-color     280ms cubic-bezier(0.16,1,0.3,1),
+    box-shadow       var(--dur-base),
+    transform        var(--dur-base) var(--ease-out);
+}
+
+/* Field inputs transition */
+.field-input {
+  transition:
+    background-color 300ms cubic-bezier(0.16,1,0.3,1),
+    border-color     var(--dur-fast),
+    box-shadow       var(--dur-fast),
+    color            250ms;
 }
 
 /* Landscape compact mode */
@@ -1445,8 +1553,12 @@ function initTheme(){
 }
 function toggleTheme(){
   const isDark = document.documentElement.getAttribute('data-theme')==='dark';
+  // Aktifkan transisi global pada semua elemen
+  document.body.classList.add('theme-transitioning');
   document.documentElement.setAttribute('data-theme', isDark?'light':'dark');
   localStorage.setItem(THEME_KEY, isDark?'light':'dark');
+  // Lepas class setelah transisi selesai
+  setTimeout(()=>document.body.classList.remove('theme-transitioning'), 400);
 }
 
 // ═══════════════════════════════════════════════════════
@@ -1484,7 +1596,11 @@ function toggleCriteriaGroup(g){
   const hidden = rows.length>0 && rows[0].classList.contains('hidden');
   rows.forEach(r=>r.classList.toggle('hidden',!hidden));
   cards.forEach(c=>c.classList.toggle('hidden',!hidden));
-  [tIcon,cIcon].forEach(ic=>{ if(ic){ hidden?ic.classList.add('open'):ic.classList.remove('open'); } });
+  [tIcon,cIcon].forEach(ic=>{
+    if(!ic) return;
+    if(hidden){ ic.classList.add('open'); ic.style.transform='rotate(180deg)'; }
+    else      { ic.classList.remove('open'); ic.style.transform='rotate(0deg)'; }
+  });
   saveUIState('critGroups', g, !hidden);
 }
 
@@ -1497,7 +1613,11 @@ function toggleSpecialReqGroup(g, forceHide=false){
   const newHide = forceHide ? true : !hidden;
   rows.forEach(r=>r.classList.toggle('hidden',newHide));
   cards.forEach(c=>c.classList.toggle('hidden',newHide));
-  [tIcon,cIcon].forEach(ic=>{ if(ic){ newHide?ic.classList.remove('open'):ic.classList.add('open'); } });
+  [tIcon,cIcon].forEach(ic=>{
+    if(!ic) return;
+    if(newHide){ ic.classList.remove('open'); ic.style.transform='rotate(0deg)'; }
+    else       { ic.classList.add('open');    ic.style.transform='rotate(180deg)'; }
+  });
   if(!forceHide) saveUIState('reqGroups', g, !newHide);
 }
 
@@ -1527,8 +1647,9 @@ function toggleScoreBar(){
 // ═══════════════════════════════════════════════════════
 // CHEVRON SVG
 // ═══════════════════════════════════════════════════════
-function chevronSVG(id){
-  return `<svg id="${id}" class="section-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:18px;height:18px;flex-shrink:0;transition:transform .22s var(--ease-out),color .15s;color:var(--text-muted)"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>`;
+function chevronSVG(id, startOpen=false){
+  const rot = startOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+  return `<svg id="${id}" class="section-chevron${startOpen?' open':''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:18px;height:18px;flex-shrink:0;transition:transform .25s cubic-bezier(0.16,1,0.3,1),color .15s;color:var(--text-muted);transform:${rot}"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>`;
 }
 
 // ═══════════════════════════════════════════════════════
@@ -1538,7 +1659,7 @@ function buildScoreCols(crit, suffix){
   return AREAS.map(area=>{
     const max = getMaxScore(crit.areas[area]);
     if(crit.areas[area]==='NA'){
-      return `<td style="padding:6px 4px;text-align:center;background:var(--surface);border-bottom:1px solid var(--border);"><span class="na-pill">NA</span></td>`;
+      return `<td class="tbl-cell" style="padding:6px 4px;text-align:center;"><span class="na-pill">NA</span></td>`;
     }
     const opts = ['NA'];
     for(let i=1;i<=max;i++) opts.push(i);
@@ -1548,7 +1669,7 @@ function buildScoreCols(crit, suffix){
       const cls = v==='NA'?'sel-ok':'sel-bad';
       return `<input type="radio" id="${iid}" name="crit-${crit.no}-${area}${suffix}" value="${numVal}" class="score-input"><label for="${iid}" class="score-label ${cls}" title="${v==='NA'?'Tidak Berlaku':'Nilai '+v}">${v}</label>`;
     }).join('');
-    return `<td style="padding:4px 3px;vertical-align:top;background:var(--surface);border-bottom:1px solid var(--border);"><div class="score-cols">${cols}</div></td>`;
+    return `<td class="tbl-cell" style="padding:4px 3px;vertical-align:top;"><div class="score-cols">${cols}</div></td>`;
   }).join('');
 }
 
@@ -1585,9 +1706,7 @@ function renderCriteriaTable(){
       const tr = document.createElement('tr');
       if(crit.group) tr.classList.add(`grp-${crit.group}`,'hidden');
       const indent = crit.displayNo ? 'padding-left:20px;' : '';
-      tr.innerHTML=`<td style="padding:8px 6px;text-align:center;font-size:12px;font-weight:600;color:var(--brand);background:var(--surface);border-bottom:1px solid var(--border);white-space:nowrap;">${dispNo}</td>
-        <td style="${indent}padding:8px 6px;font-size:12px;color:var(--text-secondary);background:var(--surface);border-bottom:1px solid var(--border);line-height:1.5;">${crit.text}</td>
-        ${buildScoreCols(crit,'_t')}`;
+      tr.innerHTML=`<td class="tbl-cell tbl-no">${dispNo}</td><td class="tbl-cell tbl-text${crit.displayNo?' tbl-indent':''}">${crit.text}</td>${buildScoreCols(crit,'_t')}`;
       tbody.appendChild(tr);
 
       // Mobile card
@@ -1598,7 +1717,7 @@ function renderCriteriaTable(){
       const areasCols = AREAS.map(area=>{
         const max = getMaxScore(crit.areas[area]);
         if(crit.areas[area]==='NA'){
-          return `<div class="ikl-card-area"><div class="ikl-card-area-label">${area}</div><span class="na-pill" style="width:100%;font-size:9px;">NA</span></div>`;
+          return `<div class="ikl-card-area"><div class="ikl-card-area-label">${area}</div><span class="na-pill" style="font-size:9px;width:100%;text-align:center;">NA</span></div>`;
         }
         const opts = ['NA'];
         for(let i=1;i<=max;i++) opts.push(i);
@@ -1660,8 +1779,7 @@ function renderSpecialRequirements(){
     } else if(req.isSubHeader){
       const tr = document.createElement('tr');
       if(req.group) tr.classList.add(`rgrp-${req.group}`,'hidden');
-      tr.innerHTML=`<td style="padding:8px 6px;text-align:center;font-size:12px;color:var(--text-muted);background:var(--surface);border-bottom:1px solid var(--border);">${dispNo}</td>
-        <td colspan="2" style="padding:8px 12px;font-size:12px;color:var(--text-muted);font-style:italic;background:var(--surface);border-bottom:1px solid var(--border);">${req.text}</td>`;
+      tr.innerHTML=`<td class="tbl-cell tbl-muted">${dispNo}</td><td class="tbl-cell tbl-muted" style="padding:8px 12px;font-style:italic;" colspan="2">${req.text}</td>`;
       tbody.appendChild(tr);
 
       const cd = document.createElement('div');
@@ -1674,10 +1792,7 @@ function renderSpecialRequirements(){
       const indentPl = String(req.no).includes('.')?'padding-left:20px;':'';
       const tr = document.createElement('tr');
       if(req.group) tr.classList.add(`rgrp-${req.group}`,'hidden');
-      tr.innerHTML=`<td style="padding:8px 6px;text-align:center;font-size:12px;font-weight:600;color:var(--brand);background:var(--surface);border-bottom:1px solid var(--border);white-space:nowrap;">${dispNo}</td>
-        <td style="${indentPl}padding:8px 6px;font-size:12px;color:var(--text-secondary);background:var(--surface);border-bottom:1px solid var(--border);">${req.text}</td>
-        <td style="padding:8px 10px;background:var(--surface);border-bottom:1px solid var(--border);">
-          <div style="display:flex;gap:6px;">${buildYaTidak(req.no,'_t')}</div></td>`;
+      tr.innerHTML=`<td class="tbl-cell tbl-no">${dispNo}</td><td class="tbl-cell tbl-text${String(req.no).includes('.')?` tbl-indent`:''}">${req.text}</td><td class="tbl-cell" style="padding:8px 10px;"><div style="display:flex;gap:6px;">${buildYaTidak(req.no,'_t')}</div></td>`;
       tbody.appendChild(tr);
 
       const card = document.createElement('div');
@@ -1899,16 +2014,20 @@ function loadUIState(){
     document.querySelectorAll(`#inspection-body .grp-${g}`).forEach(r=>r.classList.toggle('hidden',hidden));
     document.querySelectorAll(`#inspection-cards-wrap .grp-${g}`).forEach(c=>c.classList.toggle('hidden',hidden));
     const ti=document.getElementById(`gicon-t-${g}`), ci=document.getElementById(`gicon-c-${g}`);
-    if(ti) hidden?ti.classList.remove('open'):ti.classList.add('open');
-    if(ci) hidden?ci.classList.remove('open'):ci.classList.add('open');
+    [ti,ci].forEach(ic=>{ if(!ic) return;
+      if(hidden){ ic.classList.remove('open'); ic.style.transform='rotate(0deg)'; }
+      else      { ic.classList.add('open');    ic.style.transform='rotate(180deg)'; }
+    });
   }); }
   if(s.reqGroups){ Object.entries(s.reqGroups).forEach(([g,expanded])=>{
     const hidden=!expanded;
     document.querySelectorAll(`#special-req-body .rgrp-${g}`).forEach(r=>r.classList.toggle('hidden',hidden));
     document.querySelectorAll(`#special-req-cards-wrap .rgrp-${g}`).forEach(c=>c.classList.toggle('hidden',hidden));
     const ti=document.getElementById(`rgicon-t-${g}`), ci=document.getElementById(`rgicon-c-${g}`);
-    if(ti) hidden?ti.classList.remove('open'):ti.classList.add('open');
-    if(ci) hidden?ci.classList.remove('open'):ci.classList.add('open');
+    [ti,ci].forEach(ic=>{ if(!ic) return;
+      if(hidden){ ic.classList.remove('open'); ic.style.transform='rotate(0deg)'; }
+      else      { ic.classList.add('open');    ic.style.transform='rotate(180deg)'; }
+    });
   }); }
 }
 
