@@ -91,28 +91,68 @@
 }
 
 [data-theme="dark"] {
-  --bg:           var(--gray-950);
-  --bg-alt:       var(--gray-900);
-  --surface:      var(--gray-800);
-  --surface-alt:  var(--gray-700);
-  --border:       var(--gray-700);
-  --border-strong:var(--gray-600);
-  --text-primary: #e8f0eb;
-  --text-secondary:#93a89d;
-  --text-muted:   var(--gray-600);
-  --brand:        var(--green-500);
-  --brand-light:  rgba(106,179,130,.15);
-  --brand-hover:  var(--green-600);
-  --danger:       #ef5050;
-  --danger-light: rgba(239,80,80,.12);
-  --accent:       #e08a72;
-  --accent-light: rgba(224,138,114,.12);
-  --shadow-xs: 0 1px 2px rgba(0,0,0,.3);
-  --shadow-sm: 0 2px 6px rgba(0,0,0,.35);
-  --shadow-md: 0 4px 14px rgba(0,0,0,.4);
-  --shadow-lg: 0 10px 30px rgba(0,0,0,.45);
-  --shadow-xl: 0 20px 50px rgba(0,0,0,.55);
+  --bg:            #0e1512;
+  --bg-alt:        #131a17;
+  --surface:       #1a2420;
+  --surface-alt:   #243028;
+  --border:        #2e3d36;
+  --border-strong: #3d5248;
+  --text-primary:  #edf5f0;
+  --text-secondary:#b8d4c2;
+  --text-muted:    #7a9e8a;
+  --brand:         #6ecf8e;
+  --brand-light:   rgba(110,207,142,.14);
+  --brand-hover:   #5ab87a;
+  --danger:        #ff6b6b;
+  --danger-light:  rgba(255,107,107,.14);
+  --accent:        #f0a080;
+  --accent-light:  rgba(240,160,128,.14);
+  --shadow-xs: 0 1px 3px rgba(0,0,0,.4);
+  --shadow-sm: 0 2px 8px rgba(0,0,0,.45);
+  --shadow-md: 0 4px 16px rgba(0,0,0,.5);
+  --shadow-lg: 0 10px 32px rgba(0,0,0,.55);
+  --shadow-xl: 0 20px 56px rgba(0,0,0,.65);
 }
+
+/* ── DARK MODE: Override kontras spesifik ── */
+[data-theme="dark"] .tbl-cell          { color: var(--text-secondary); }
+[data-theme="dark"] .tbl-no            { color: var(--brand) !important; }
+[data-theme="dark"] .tbl-muted         { color: var(--text-muted) !important; }
+[data-theme="dark"] .ikl-table .row-group-header td { color: var(--brand) !important; }
+[data-theme="dark"] .ikl-card-header   { color: var(--brand); background: var(--brand-light); border-color: var(--border); }
+[data-theme="dark"] .ikl-card-num      { color: var(--brand); background: var(--brand-light); }
+[data-theme="dark"] .ikl-card          { background: var(--surface); border-color: var(--border); }
+[data-theme="dark"] .legend-card       { background: var(--surface-alt); border-color: var(--border); }
+[data-theme="dark"] .legend-card-title { color: var(--brand); border-color: var(--border); }
+[data-theme="dark"] .legend-item       { color: var(--text-secondary); }
+[data-theme="dark"] .legend-item strong{ color: var(--text-primary); }
+[data-theme="dark"] .score-label       { background: var(--surface-alt); border-color: var(--border); color: var(--text-secondary); }
+[data-theme="dark"] .na-pill           { background: var(--surface-alt); border-color: var(--border); color: var(--text-muted); }
+[data-theme="dark"] .special-req-label { background: var(--surface-alt); border-color: var(--border); color: var(--text-secondary); }
+[data-theme="dark"] .section-hdr-title { color: var(--text-primary); }
+[data-theme="dark"] .section-hdr-sub   { color: var(--text-muted); }
+[data-theme="dark"] .field-label       { color: var(--text-secondary); }
+[data-theme="dark"] .field-input       { background: var(--surface-alt); border-color: var(--border); color: var(--text-primary); }
+[data-theme="dark"] .field-input::placeholder { color: var(--text-muted); }
+[data-theme="dark"] .stat-label        { color: var(--text-secondary); }
+[data-theme="dark"] .stat-sub          { color: var(--text-muted); }
+[data-theme="dark"] .score-bar-label   { color: var(--text-primary); }
+[data-theme="dark"] .score-bar-meta    { color: var(--text-secondary); }
+[data-theme="dark"] .score-final-label { color: var(--text-secondary); }
+[data-theme="dark"] .bar-score-label   { color: var(--text-secondary); }
+[data-theme="dark"] .bar-toggle-btn    { color: var(--text-secondary); background: var(--surface-alt); border-color: var(--border); }
+[data-theme="dark"] .sign-area         { border-color: var(--border-strong); }
+[data-theme="dark"] .sign-area span    { color: var(--text-muted); }
+[data-theme="dark"] .divider           { background: var(--border); }
+[data-theme="dark"] #inspection-table-wrap,
+[data-theme="dark"] #special-req-table-wrap { border-color: var(--border); }
+[data-theme="dark"] .ikl-table thead tr th  { background: #1a3528; }
+[data-theme="dark"] .ikl-table tbody tr:hover td { background: var(--surface-alt); }
+[data-theme="dark"] .grp-card-inner .ikl-card-text,
+[data-theme="dark"] .ikl-card p        { color: var(--text-secondary); }
+[data-theme="dark"] .score-display     { background: var(--surface); border-color: var(--border); }
+[data-theme="dark"] .progress-track    { background: var(--surface-alt); border-color: var(--border); }
+[data-theme="dark"] .req-subheader    { color: var(--text-muted); }
 
 /* ═══════════════════════════════════════════════════════
    RESET & BASE
@@ -135,18 +175,36 @@ body {
   min-height: 100dvh;
 }
 
-/* Transisi tema mulus untuk SEMUA elemen */
-.theme-transitioning,
-.theme-transitioning *,
-.theme-transitioning *::before,
-.theme-transitioning *::after {
-  transition:
-    background-color 320ms cubic-bezier(0.16,1,0.3,1),
-    border-color     280ms cubic-bezier(0.16,1,0.3,1),
-    color            240ms cubic-bezier(0.16,1,0.3,1),
-    box-shadow       280ms cubic-bezier(0.16,1,0.3,1),
-    fill             200ms ease,
-    stroke           200ms ease !important;
+/* ── TRANSISI TEMA: metode CSS variable ──
+   Semua elemen yg perlu transisi tema menggunakan var(--td)
+   sebagai durasi. Saat tema toggle, --td di-set ke nilai
+   aktif 350ms, lalu dikembalikan ke 0ms setelah selesai.   */
+:root { --td: 0ms; }
+html.theme-switching { --td: 350ms; }
+
+/* Elemen yg ikut transisi tema */
+body,
+.section-card, .section-hdr, .section-hdr-icon,
+.section-body-inner, .section-hdr-title, .section-hdr-sub,
+.field-input, .field-label,
+.legend-card, .legend-card-title, .legend-item, .legend-item strong,
+.ikl-table tbody td, .ikl-table .row-group-header td,
+.ikl-table thead tr th,
+.ikl-card, .ikl-card-header, .ikl-card-num, .ikl-card-text,
+.ikl-card-area-label,
+.score-label, .na-pill,
+.special-req-label,
+.score-display, .score-bar-label, .score-bar-meta,
+.progress-track, .score-final, .score-final-label,
+.bar-score-label, .bar-score-right,
+#fixed-score-bar, #score-bar-inner, #bar-toggle-btn,
+.stat-card, .stat-label, .stat-sub,
+.divider, .sign-area,
+.tbl-cell, .modal-box,
+#app-wrapper {
+  transition-property: background-color, border-color, color, box-shadow;
+  transition-duration: var(--td);
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Background texture */
@@ -290,8 +348,7 @@ h4,h5,h6,p,span,label,input,textarea,button,td,th { font-family: var(--font-body
   box-shadow: var(--shadow-sm);
   margin-bottom: 12px;
   overflow:hidden;
-  transition: box-shadow var(--dur-base), border-color var(--dur-base),
-              background var(--dur-slow);
+  transition: box-shadow var(--dur-base);
   animation: cardIn .4s var(--ease-out) both;
 }
 .section-card:hover { box-shadow:var(--shadow-md); }
@@ -385,7 +442,7 @@ h4,h5,h6,p,span,label,input,textarea,button,td,th { font-family: var(--font-body
   font-family:var(--font-body);
   color:var(--text-primary);
   outline:none;
-  transition: border-color var(--dur-fast), box-shadow var(--dur-fast), background var(--dur-slow);
+  transition: border-color var(--dur-fast), box-shadow var(--dur-fast);
   -webkit-appearance:none;
 }
 .field-input:focus {
@@ -413,8 +470,8 @@ textarea.field-input { resize:vertical; min-height:90px; }
   border:1px solid var(--border);
   border-radius:var(--r-md);
   padding:12px 14px;
-  transition:background var(--dur-slow), border-color var(--dur-slow);
 }
+
 .legend-card-title {
   font-size:11px; font-weight:700;
   text-transform:uppercase; letter-spacing:.06em;
@@ -540,6 +597,14 @@ textarea.field-input { resize:vertical; min-height:90px; }
 
 .ikl-table tbody tr { transition:background var(--dur-fast); }
 .ikl-table tbody tr:hover td { background:var(--surface-alt); }
+
+/* Collapsible group wrapper tbody */
+.grp-tbody {
+  display: table-row-group;
+}
+.grp-tbody.grp-hidden {
+  display: none;
+}
 .ikl-table tbody td {
   padding:8px 6px;
   border-bottom:1px solid var(--border);
@@ -572,9 +637,7 @@ textarea.field-input { resize:vertical; min-height:90px; }
   border-radius:var(--r-md);
   padding:14px;
   margin-bottom:8px;
-  transition:background var(--dur-slow) var(--ease-out),
-             border-color var(--dur-slow) var(--ease-out),
-             box-shadow var(--dur-fast);
+  transition: box-shadow var(--dur-fast);
   animation:cardIn .3s var(--ease-out) both;
 }
 .ikl-card:hover { box-shadow:var(--shadow-sm); border-color:var(--border-strong); }
@@ -592,6 +655,25 @@ textarea.field-input { resize:vertical; min-height:90px; }
   transition:background var(--dur-fast);
 }
 .ikl-card-header:hover { background:rgba(45,90,61,.15); }
+
+/* Animated group container untuk mobile cards */
+.grp-card-wrap {
+  display: grid;
+  grid-template-rows: 1fr;
+  transition: grid-template-rows 320ms cubic-bezier(0.16,1,0.3,1),
+              opacity 280ms ease;
+  opacity: 1;
+  overflow: hidden;
+}
+.grp-card-wrap.grp-hidden {
+  grid-template-rows: 0fr;
+  opacity: 0;
+  pointer-events: none;
+}
+.grp-card-inner {
+  overflow: hidden;
+  min-height: 0;
+}
 
 .ikl-card-num {
   font-size:11px; font-weight:700;
@@ -968,16 +1050,12 @@ textarea.field-input { resize:vertical; min-height:90px; }
 }
 
 
-/* Table cell classes (menggantikan inline style untuk transisi tema mulus) */
+/* Table cell classes */
 .tbl-cell {
   background: var(--surface);
   border-bottom: 1px solid var(--border);
   color: var(--text-secondary);
   font-size: 12px;
-  transition:
-    background-color 320ms cubic-bezier(0.16,1,0.3,1),
-    border-color     280ms cubic-bezier(0.16,1,0.3,1),
-    color            240ms cubic-bezier(0.16,1,0.3,1);
 }
 .tbl-no {
   padding: 8px 6px;
@@ -993,63 +1071,15 @@ textarea.field-input { resize:vertical; min-height:90px; }
 .tbl-indent { padding-left: 20px !important; }
 .tbl-muted  { color: var(--text-muted) !important; font-size:12px; padding:8px 6px; text-align:center; }
 
-/* Group header rows also transition */
-.ikl-table .row-group-header td {
-  transition:
-    background-color 320ms cubic-bezier(0.16,1,0.3,1),
-    color            240ms cubic-bezier(0.16,1,0.3,1);
-}
 
-/* NA pill transition */
-.na-pill {
-  transition:
-    background-color 320ms cubic-bezier(0.16,1,0.3,1),
-    border-color     280ms cubic-bezier(0.16,1,0.3,1),
-    color            240ms cubic-bezier(0.16,1,0.3,1);
-}
 
-/* Score/special req labels transition */
-.score-label, .special-req-label {
-  transition:
-    background-color var(--dur-fast) var(--ease-out),
-    border-color     var(--dur-fast) var(--ease-out),
-    color            var(--dur-fast) var(--ease-out),
-    transform        var(--dur-fast) var(--ease-spring),
-    box-shadow       var(--dur-fast);
-}
 
-/* Legend card transition */
-.legend-card {
-  transition:
-    background-color 320ms cubic-bezier(0.16,1,0.3,1),
-    border-color     280ms cubic-bezier(0.16,1,0.3,1);
-}
 
-/* Section card & score display transition */
-.section-card, .score-display {
-  transition:
-    background-color 320ms cubic-bezier(0.16,1,0.3,1),
-    border-color     280ms cubic-bezier(0.16,1,0.3,1),
-    box-shadow       var(--dur-base);
-}
 
-/* Fixed score bar transition */
-#fixed-score-bar {
-  transition:
-    background-color 320ms cubic-bezier(0.16,1,0.3,1),
-    border-color     280ms cubic-bezier(0.16,1,0.3,1),
-    box-shadow       var(--dur-base),
-    transform        var(--dur-base) var(--ease-out);
-}
 
-/* Field inputs transition */
-.field-input {
-  transition:
-    background-color 300ms cubic-bezier(0.16,1,0.3,1),
-    border-color     var(--dur-fast),
-    box-shadow       var(--dur-fast),
-    color            250ms;
-}
+
+
+
 
 /* Landscape compact mode */
 @media (orientation: landscape) and (max-height: 520px) {
@@ -1553,12 +1583,12 @@ function initTheme(){
 }
 function toggleTheme(){
   const isDark = document.documentElement.getAttribute('data-theme')==='dark';
-  // Aktifkan transisi global pada semua elemen
-  document.body.classList.add('theme-transitioning');
+  // Aktifkan --td (transition duration) via class di <html>
+  document.documentElement.classList.add('theme-switching');
   document.documentElement.setAttribute('data-theme', isDark?'light':'dark');
   localStorage.setItem(THEME_KEY, isDark?'light':'dark');
-  // Lepas class setelah transisi selesai
-  setTimeout(()=>document.body.classList.remove('theme-transitioning'), 400);
+  // Lepas class setelah transisi selesai (350ms + buffer 50ms)
+  setTimeout(()=>document.documentElement.classList.remove('theme-switching'), 400);
 }
 
 // ═══════════════════════════════════════════════════════
@@ -1589,35 +1619,56 @@ function toggleSection(id){
 // CRITERIA GROUP COLLAPSE
 // ═══════════════════════════════════════════════════════
 function toggleCriteriaGroup(g){
-  const rows   = document.querySelectorAll(`#inspection-body .grp-${g}`);
-  const cards  = document.querySelectorAll(`#inspection-cards-wrap .grp-${g}`);
-  const tIcon  = document.getElementById(`gicon-t-${g}`);
-  const cIcon  = document.getElementById(`gicon-c-${g}`);
-  const hidden = rows.length>0 && rows[0].classList.contains('hidden');
-  rows.forEach(r=>r.classList.toggle('hidden',!hidden));
-  cards.forEach(c=>c.classList.toggle('hidden',!hidden));
+  const grpTbody   = document.getElementById(`gtbody-${g}`);
+  const grpCardWrap= document.getElementById(`gcwrap-${g}`);
+  const tIcon      = document.getElementById(`gicon-t-${g}`);
+  const cIcon      = document.getElementById(`gicon-c-${g}`);
+
+  if(!grpTbody && !grpCardWrap) return;
+  const isHidden = grpTbody ? grpTbody.classList.contains('grp-hidden')
+                             : grpCardWrap.classList.contains('grp-hidden');
+
+  if(grpTbody)    grpTbody.classList.toggle('grp-hidden', !isHidden);
+  if(grpCardWrap) grpCardWrap.classList.toggle('grp-hidden', !isHidden);
+
   [tIcon,cIcon].forEach(ic=>{
     if(!ic) return;
-    if(hidden){ ic.classList.add('open'); ic.style.transform='rotate(180deg)'; }
-    else      { ic.classList.remove('open'); ic.style.transform='rotate(0deg)'; }
+    const nowOpen = isHidden; // kita baru saja buka jika tadinya hidden
+    ic.style.transform = nowOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+    nowOpen ? ic.classList.add('open') : ic.classList.remove('open');
   });
-  saveUIState('critGroups', g, !hidden);
+  saveUIState('critGroups', g, isHidden); // simpan: expanded = isHidden (baru dibuka)
 }
 
 function toggleSpecialReqGroup(g, forceHide=false){
-  const rows  = document.querySelectorAll(`#special-req-body .rgrp-${g}`);
-  const cards = document.querySelectorAll(`#special-req-cards-wrap .rgrp-${g}`);
-  const tIcon = document.getElementById(`rgicon-t-${g}`);
-  const cIcon = document.getElementById(`rgicon-c-${g}`);
-  const hidden = rows.length>0 && rows[0].classList.contains('hidden');
-  const newHide = forceHide ? true : !hidden;
-  rows.forEach(r=>r.classList.toggle('hidden',newHide));
-  cards.forEach(c=>c.classList.toggle('hidden',newHide));
+  const grpTbody    = document.getElementById(`rgtbody-${g}`);
+  const grpCardWrap = document.getElementById(`rgcwrap-${g}`);
+  const tIcon       = document.getElementById(`rgicon-t-${g}`);
+  const cIcon       = document.getElementById(`rgicon-c-${g}`);
+
+  if(!grpTbody && !grpCardWrap) return;
+
+  // Tentukan state saat ini
+  const isCurrentlyHidden = grpTbody
+    ? grpTbody.classList.contains('grp-hidden')
+    : grpCardWrap.classList.contains('grp-hidden');
+
+  const newHide = forceHide ? true : !isCurrentlyHidden;
+
+  if(grpTbody)    grpTbody.classList.toggle('grp-hidden', newHide);
+  if(grpCardWrap) grpCardWrap.classList.toggle('grp-hidden', newHide);
+
   [tIcon,cIcon].forEach(ic=>{
     if(!ic) return;
-    if(newHide){ ic.classList.remove('open'); ic.style.transform='rotate(0deg)'; }
-    else       { ic.classList.add('open');    ic.style.transform='rotate(180deg)'; }
+    if(newHide){
+      ic.classList.remove('open');
+      ic.style.transform='rotate(0deg)';
+    } else {
+      ic.classList.add('open');
+      ic.style.transform='rotate(180deg)';
+    }
   });
+
   if(!forceHide) saveUIState('reqGroups', g, !newHide);
 }
 
@@ -1674,26 +1725,46 @@ function buildScoreCols(crit, suffix){
 }
 
 function renderCriteriaTable(){
-  const tbody = document.getElementById('inspection-body');
+  const mainTbody = document.getElementById('inspection-body');
   const cards = document.getElementById('inspection-cards-wrap');
-  tbody.innerHTML=''; cards.innerHTML='';
+  mainTbody.innerHTML=''; cards.innerHTML='';
+
+  // Tracking tbody dan card-wrap per group
+  let currentTbody = mainTbody;   // tbody aktif untuk rows
+  let currentCardWrap = null;     // div wrap animasi untuk cards
 
   CRITERIA.forEach(crit=>{
     const dispNo = crit.displayNo || crit.no;
 
     if(crit.isHeader){
-      // Table header row
-      const tr = document.createElement('tr');
-      tr.className='row-group-header';
       const hasChev = !!crit.group;
-      const chev = hasChev ? `<span style="display:inline-flex;align-items:center;margin-left:8px;">${chevronSVG(`gicon-t-${crit.group}`)}</span>` : '';
-      tr.innerHTML=`<td colspan="10" style="padding:10px 12px;cursor:${hasChev?'pointer':'default'};" ${hasChev?`onclick="toggleCriteriaGroup('${crit.group}')"`:''}>
+
+      // ── TABLE: header row di mainTbody, lalu buat tbody baru untuk isinya ──
+      const headerRow = document.createElement('tr');
+      headerRow.className='row-group-header';
+      const chev = hasChev
+        ? `<span style="display:inline-flex;align-items:center;margin-left:8px;">${chevronSVG(`gicon-t-${crit.group}`)}</span>`
+        : '';
+      headerRow.innerHTML=`<td colspan="10" style="padding:10px 12px;cursor:${hasChev?'pointer':'default'};"
+        ${hasChev?`onclick="toggleCriteriaGroup('${crit.group}')"`:''}>
         <div style="display:flex;align-items:center;justify-content:space-between;">
           <span style="font-family:var(--font-body);font-size:13px;">${crit.no}. ${crit.text}</span>${chev}
         </div></td>`;
-      tbody.appendChild(tr);
+      mainTbody.appendChild(headerRow);
 
-      // Card header
+      if(hasChev){
+        // Buat tbody terpisah untuk isi grup ini
+        const grpTbody = document.createElement('tbody');
+        grpTbody.id = `gtbody-${crit.group}`;
+        grpTbody.className = `grp-tbody grp-hidden`;
+        // Sisipkan setelah mainTbody di dalam table
+        mainTbody.parentNode.insertBefore(grpTbody, mainTbody.nextSibling);
+        currentTbody = grpTbody;
+      } else {
+        currentTbody = mainTbody;
+      }
+
+      // ── CARDS: header + animated wrap ──
       const cd = document.createElement('div');
       cd.className='ikl-card-header';
       const cardChev = hasChev ? chevronSVG(`gicon-c-${crit.group}`) : '';
@@ -1701,24 +1772,35 @@ function renderCriteriaTable(){
       cd.innerHTML=`<span style="font-size:13px;flex:1;">${crit.no}. ${crit.text}</span>${cardChev}`;
       cards.appendChild(cd);
 
-    } else {
-      // Table data row
-      const tr = document.createElement('tr');
-      if(crit.group) tr.classList.add(`grp-${crit.group}`,'hidden');
-      const indent = crit.displayNo ? 'padding-left:20px;' : '';
-      tr.innerHTML=`<td class="tbl-cell tbl-no">${dispNo}</td><td class="tbl-cell tbl-text${crit.displayNo?' tbl-indent':''}">${crit.text}</td>${buildScoreCols(crit,'_t')}`;
-      tbody.appendChild(tr);
+      if(hasChev){
+        // Buat wrap animasi untuk isi grup
+        const wrap = document.createElement('div');
+        wrap.id = `gcwrap-${crit.group}`;
+        wrap.className = 'grp-card-wrap grp-hidden';
+        const inner = document.createElement('div');
+        inner.className = 'grp-card-inner';
+        wrap.appendChild(inner);
+        cards.appendChild(wrap);
+        currentCardWrap = inner;
+      } else {
+        currentCardWrap = null;
+      }
 
-      // Mobile card
+    } else {
+      // ── TABLE data row — masuk ke currentTbody ──
+      const tr = document.createElement('tr');
+      tr.innerHTML=`<td class="tbl-cell tbl-no">${dispNo}</td><td class="tbl-cell tbl-text${crit.displayNo?' tbl-indent':''}">${crit.text}</td>${buildScoreCols(crit,'_t')}`;
+      currentTbody.appendChild(tr);
+
+      // ── MOBILE card ──
       const card = document.createElement('div');
       card.className='ikl-card';
-      if(crit.group) card.classList.add(`grp-${crit.group}`,'hidden');
 
       const areasCols = AREAS.map(area=>{
-        const max = getMaxScore(crit.areas[area]);
         if(crit.areas[area]==='NA'){
           return `<div class="ikl-card-area"><div class="ikl-card-area-label">${area}</div><span class="na-pill" style="font-size:9px;width:100%;text-align:center;">NA</span></div>`;
         }
+        const max = getMaxScore(crit.areas[area]);
         const opts = ['NA'];
         for(let i=1;i<=max;i++) opts.push(i);
         const cols = opts.map(v=>{
@@ -1736,7 +1818,13 @@ function renderCriteriaTable(){
         <div style="border-top:1px dashed var(--border);padding-top:10px;">
           <div class="ikl-card-areas">${areasCols}</div>
         </div>`;
-      cards.appendChild(card);
+
+      // Masuk ke wrap animasi jika ada, atau langsung ke cards
+      if(currentCardWrap){
+        currentCardWrap.appendChild(card);
+      } else {
+        cards.appendChild(card);
+      }
     }
   });
 }
@@ -1752,60 +1840,101 @@ function buildYaTidak(no, suffix){
 }
 
 function renderSpecialRequirements(){
-  const tbody = document.getElementById('special-req-body');
-  const cards = document.getElementById('special-req-cards-wrap');
-  tbody.innerHTML=''; cards.innerHTML='';
+  const mainTbody = document.getElementById('special-req-body');
+  const cards     = document.getElementById('special-req-cards-wrap');
+  mainTbody.innerHTML=''; cards.innerHTML='';
+
+  // Tracking tbody dan card-wrap per grup — pola sama dengan Bagian B
+  let currentTbody    = mainTbody;
+  let currentCardWrap = null;
 
   SPECIAL_REQUIREMENTS.forEach(req=>{
     const dispNo = req.displayNo || req.no;
 
     if(req.isHeader){
-      const tr = document.createElement('tr');
-      tr.className='row-group-header';
-      const chev = req.group ? `<span style="display:inline-flex;align-items:center;">${chevronSVG(`rgicon-t-${req.group}`)}</span>` : '';
-      tr.innerHTML=`<td colspan="3" style="padding:10px 12px;cursor:${req.group?'pointer':'default'};" ${req.group?`onclick="toggleSpecialReqGroup('${req.group}')"`:''}>
+      const hasChev = !!req.group;
+
+      // ── TABLE: header row di mainTbody ──
+      const headerRow = document.createElement('tr');
+      headerRow.className='row-group-header';
+      const chev = hasChev
+        ? `<span style="display:inline-flex;align-items:center;margin-left:8px;">${chevronSVG(`rgicon-t-${req.group}`)}</span>`
+        : '';
+      headerRow.innerHTML=`<td colspan="3" style="padding:10px 12px;cursor:${hasChev?'pointer':'default'};"
+        ${hasChev?`onclick="toggleSpecialReqGroup('${req.group}')"`:''}>
         <div style="display:flex;align-items:center;justify-content:space-between;">
           <span style="font-family:var(--font-body);font-size:13px;">${dispNo}. ${req.text}</span>${chev}
         </div></td>`;
-      tbody.appendChild(tr);
+      mainTbody.appendChild(headerRow);
 
+      if(hasChev){
+        // tbody terpisah untuk isi grup
+        const grpTbody = document.createElement('tbody');
+        grpTbody.id = `rgtbody-${req.group}`;
+        grpTbody.className = 'grp-tbody grp-hidden';
+        mainTbody.parentNode.insertBefore(grpTbody, mainTbody.nextSibling);
+        currentTbody = grpTbody;
+      } else {
+        currentTbody = mainTbody;
+      }
+
+      // ── CARDS: header + animated wrap ──
       const cd = document.createElement('div');
       cd.className='ikl-card-header';
-      const cardChev = req.group ? chevronSVG(`rgicon-c-${req.group}`) : '';
-      if(req.group) cd.setAttribute('onclick',`toggleSpecialReqGroup('${req.group}')`);
+      const cardChev = hasChev ? chevronSVG(`rgicon-c-${req.group}`) : '';
+      if(hasChev) cd.setAttribute('onclick',`toggleSpecialReqGroup('${req.group}')`);
       cd.innerHTML=`<span style="font-size:13px;flex:1;">${dispNo}. ${req.text}</span>${cardChev}`;
       cards.appendChild(cd);
 
+      if(hasChev){
+        const wrap = document.createElement('div');
+        wrap.id = `rgcwrap-${req.group}`;
+        wrap.className = 'grp-card-wrap grp-hidden';
+        const inner = document.createElement('div');
+        inner.className = 'grp-card-inner';
+        wrap.appendChild(inner);
+        cards.appendChild(wrap);
+        currentCardWrap = inner;
+      } else {
+        currentCardWrap = null;
+      }
+
     } else if(req.isSubHeader){
+      // ── SubHeader: masuk ke currentTbody / currentCardWrap ──
       const tr = document.createElement('tr');
-      if(req.group) tr.classList.add(`rgrp-${req.group}`,'hidden');
-      tr.innerHTML=`<td class="tbl-cell tbl-muted">${dispNo}</td><td class="tbl-cell tbl-muted" style="padding:8px 12px;font-style:italic;" colspan="2">${req.text}</td>`;
-      tbody.appendChild(tr);
+      tr.innerHTML=`<td class="tbl-cell tbl-muted">${dispNo}</td>
+        <td class="tbl-cell tbl-muted" style="padding:8px 12px;font-style:italic;" colspan="2">${req.text}</td>`;
+      currentTbody.appendChild(tr);
 
       const cd = document.createElement('div');
-      if(req.group) cd.classList.add(`rgrp-${req.group}`,'hidden');
-      cd.style.cssText='padding:6px 14px;font-size:12px;color:var(--text-muted);font-style:italic;';
+      cd.className='req-subheader';
+      cd.style.cssText='padding:8px 14px 4px;font-size:12px;font-style:italic;color:var(--text-muted);';
       cd.textContent=`${dispNo}. ${req.text}`;
-      cards.appendChild(cd);
+      if(currentCardWrap) currentCardWrap.appendChild(cd);
+      else cards.appendChild(cd);
 
     } else {
-      const indentPl = String(req.no).includes('.')?'padding-left:20px;':'';
+      // ── Item biasa ──
       const tr = document.createElement('tr');
-      if(req.group) tr.classList.add(`rgrp-${req.group}`,'hidden');
-      tr.innerHTML=`<td class="tbl-cell tbl-no">${dispNo}</td><td class="tbl-cell tbl-text${String(req.no).includes('.')?` tbl-indent`:''}">${req.text}</td><td class="tbl-cell" style="padding:8px 10px;"><div style="display:flex;gap:6px;">${buildYaTidak(req.no,'_t')}</div></td>`;
-      tbody.appendChild(tr);
+      tr.innerHTML=`<td class="tbl-cell tbl-no">${dispNo}</td>
+        <td class="tbl-cell tbl-text${String(req.no).includes('.')?' tbl-indent':''}">${req.text}</td>
+        <td class="tbl-cell" style="padding:8px 10px;">
+          <div style="display:flex;gap:6px;">${buildYaTidak(req.no,'_t')}</div></td>`;
+      currentTbody.appendChild(tr);
 
       const card = document.createElement('div');
       card.className='ikl-card';
-      if(req.group) card.classList.add(`rgrp-${req.group}`,'hidden');
       card.innerHTML=`<div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:10px;">
         <span class="ikl-card-num">${dispNo}</span>
         <p style="font-size:13px;color:var(--text-secondary);line-height:1.5;flex:1;">${req.text}</p></div>
         <div style="display:flex;gap:8px;">${buildYaTidak(req.no,'_m')}</div>`;
-      cards.appendChild(card);
+
+      if(currentCardWrap) currentCardWrap.appendChild(card);
+      else cards.appendChild(card);
     }
   });
-  toggleSpecialReqGroup('9_doc',true);
+  // Grup 9_doc dimulai tersembunyi
+  // (sudah grp-hidden dari awal, tidak perlu toggle lagi)
 }
 
 // ═══════════════════════════════════════════════════════
@@ -2010,9 +2139,11 @@ function loadUIState(){
     }
   }); }
   if(s.critGroups){ Object.entries(s.critGroups).forEach(([g,expanded])=>{
-    const hidden=!expanded;
-    document.querySelectorAll(`#inspection-body .grp-${g}`).forEach(r=>r.classList.toggle('hidden',hidden));
-    document.querySelectorAll(`#inspection-cards-wrap .grp-${g}`).forEach(c=>c.classList.toggle('hidden',hidden));
+    const grpTbody    = document.getElementById(`gtbody-${g}`);
+    const grpCardWrap = document.getElementById(`gcwrap-${g}`);
+    const hidden = !expanded;
+    if(grpTbody)    grpTbody.classList.toggle('grp-hidden', hidden);
+    if(grpCardWrap) grpCardWrap.classList.toggle('grp-hidden', hidden);
     const ti=document.getElementById(`gicon-t-${g}`), ci=document.getElementById(`gicon-c-${g}`);
     [ti,ci].forEach(ic=>{ if(!ic) return;
       if(hidden){ ic.classList.remove('open'); ic.style.transform='rotate(0deg)'; }
@@ -2020,9 +2151,11 @@ function loadUIState(){
     });
   }); }
   if(s.reqGroups){ Object.entries(s.reqGroups).forEach(([g,expanded])=>{
-    const hidden=!expanded;
-    document.querySelectorAll(`#special-req-body .rgrp-${g}`).forEach(r=>r.classList.toggle('hidden',hidden));
-    document.querySelectorAll(`#special-req-cards-wrap .rgrp-${g}`).forEach(c=>c.classList.toggle('hidden',hidden));
+    const grpTbody    = document.getElementById(`rgtbody-${g}`);
+    const grpCardWrap = document.getElementById(`rgcwrap-${g}`);
+    const hidden = !expanded;
+    if(grpTbody)    grpTbody.classList.toggle('grp-hidden', hidden);
+    if(grpCardWrap) grpCardWrap.classList.toggle('grp-hidden', hidden);
     const ti=document.getElementById(`rgicon-t-${g}`), ci=document.getElementById(`rgicon-c-${g}`);
     [ti,ci].forEach(ic=>{ if(!ic) return;
       if(hidden){ ic.classList.remove('open'); ic.style.transform='rotate(0deg)'; }
