@@ -1934,7 +1934,7 @@ function renderSpecialRequirements(){
       const cd = document.createElement('div');
       cd.className = 'ikl-card-header';
       const cardChev = hasChev ? chevronSVG('rgicon-c-' + req.group) : '';
-      if(hasChev) cd.setAttribute('onclick', 'toggleSpecialReqGroup(\'' + req.group + '\')');
+      if(hasChev) cd.setAttribute('onclick', "toggleSpecialReqGroup('" + req.group + "')");
       cd.innerHTML = `<span style="font-size:13px;flex:1;">${dispNo}. ${req.text}</span>${cardChev}`;
       cards.appendChild(cd);
 
@@ -2148,30 +2148,53 @@ function loadFormData(){
   if(!raw) return;
   try{
     const fd=JSON.parse(raw);
-    if(fd.textInputs){ Object.entries(fd.textInputs).forEach(([id,v])=>{ const el=document.getElementById(id); if(el) el.value=v; }); }
+    // Restore text inputs
+    if(fd.textInputs){
+      Object.entries(fd.textInputs).forEach(([id,v])=>{
+        const el=document.getElementById(id);
+        if(el) el.value=v;
+      });
+    }
+    // Restore radio inputs — sync KEDUA pasangan _t dan _m
     if(fd.radioInputs){
+      isInternalUpdate = true;
       Object.entries(fd.radioInputs).forEach(([name,val])=>{
-        document.querySelectorAll(`input[name="${name}"]`).forEach(r=>{
-          if(r.value==val){ r.checked=true; r.dispatchEvent(new Event('change',{bubbles:true})); }
+        // Tentukan base name (tanpa _t / _m)
+        const base = name.replace(/_t$/, '').replace(/_m$/, '');
+        // Cek apakah ini sudah diproses (hindari double process)
+        ['_t','_m',''].forEach(suffix=>{
+          const fullName = base + suffix;
+          document.querySelectorAll(`input[name="${fullName}"]`).forEach(r=>{
+            if(r.value == val){
+              r.checked = true;
+              // Style label langsung
+              if(r.classList.contains('score-input')) styleRadioLabels(fullName);
+              else if(r.classList.contains('special-req-input')) styleSpecialReqLabels(fullName);
+            }
+          });
         });
       });
+      isInternalUpdate = false;
+      calculateScore();
     }
   } catch(e){ console.error('Load error:',e); }
 }
 
 function initializeFormState(){
+  isInternalUpdate = true;
   calculatedMaxTotalScore=calculateMaxPossibleScore();
   document.getElementById('max-score-label').textContent=`/ maks ${calculatedMaxTotalScore}`;
   document.getElementById('embedded-max-score-label').textContent=`/ maks ${calculatedMaxTotalScore}`;
-  // Initialize default NA (value=0) for all score inputs
+  // Set default NA (value=0) untuk semua score input
   document.querySelectorAll('.score-input[value="0"]').forEach(el=>{
     el.checked=true; styleRadioLabels(el.name);
   });
-  // Initialize default Ya for special req
+  // Set default Ya untuk special req
   document.querySelectorAll('.special-req-input[value="Ya"]').forEach(el=>{
     el.checked=true; styleSpecialReqLabels(el.name);
   });
   calculateScore();
+  isInternalUpdate = false;
 }
 
 function loadUIState(){
