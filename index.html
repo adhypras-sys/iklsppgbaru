@@ -2381,26 +2381,131 @@ function exportPDF(){
 // GEOLOCATION
 // ═══════════════════════════════════════════════════════
 function setupGeolocation(){
-  const btn=document.getElementById('get-location-btn');
-  btn.addEventListener('click',()=>{
-    const iconSVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>';
-    btn.disabled=true;
-    btn.innerHTML=`<span class="spin" style="width:15px;height:15px;border:2px solid rgba(255,255,255,.4);border-top-color:white;border-radius:50%;display:inline-block;"></span> Mengambil lokasi...`;
-    if(!navigator.geolocation){ btn.innerHTML=iconSVG+' Tidak didukung'; btn.style.background='var(--danger)'; setTimeout(()=>{btn.disabled=false;btn.innerHTML=iconSVG+' Dapatkan Lokasi GPS';btn.style.background='';},3000); return; }
-    navigator.geolocation.getCurrentPosition(
-      pos=>{
-        document.getElementById('latitude').value=pos.coords.latitude.toFixed(6);
-        document.getElementById('longitude').value=pos.coords.longitude.toFixed(6);
-        btn.innerHTML=iconSVG+' Lokasi diperoleh ✓';
-        saveFormData();
-        setTimeout(()=>{ btn.disabled=false; btn.innerHTML=iconSVG+' Dapatkan Lokasi GPS'; },2200);
-      },
-      ()=>{
-        btn.innerHTML=iconSVG+' Gagal — coba lagi';
-        setTimeout(()=>{ btn.disabled=false; btn.innerHTML=iconSVG+' Dapatkan Lokasi GPS'; },3000);
-      },
-      {enableHighAccuracy:true,timeout:15000}
-    );
+  const btn = document.getElementById('get-location-btn');
+
+  const iconPin  = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;flex-shrink:0"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>';
+  const iconWarn = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;flex-shrink:0"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>';
+  const iconCheck= '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;flex-shrink:0"><polyline points="20 6 9 17 4 12"/></svg>';
+  const spinner  = '<span style="width:14px;height:14px;border:2px solid rgba(255,255,255,.35);border-top-color:white;border-radius:50%;display:inline-block;flex-shrink:0;animation:spin 0.8s linear infinite;"></span>';
+
+  const ORIG_TEXT = iconPin + ' Dapatkan Lokasi GPS';
+
+  function setLoading(){
+    btn.disabled = true;
+    btn.style.cssText = '';
+    btn.classList.remove('btn-danger');
+    btn.classList.add('btn-primary');
+    btn.innerHTML = spinner + ' Mengambil lokasi...';
+  }
+
+  function setSuccess(lat, lng){
+    btn.disabled = false;
+    btn.style.cssText = '';
+    btn.classList.remove('btn-danger');
+    btn.classList.add('btn-primary');
+    btn.innerHTML = iconCheck + ` ${lat}, ${lng}`;
+    // Kembalikan ke teks asli setelah 3 detik
+    setTimeout(()=>{ btn.innerHTML = ORIG_TEXT; }, 3000);
+  }
+
+  function setError(msg){
+    btn.disabled = false;
+    // Ubah ke merah
+    btn.classList.remove('btn-primary');
+    btn.classList.add('btn-danger');
+    btn.style.background  = 'var(--danger)';
+    btn.style.borderColor = 'var(--danger)';
+    btn.style.color       = 'white';
+    btn.innerHTML = iconWarn + ' ' + msg;
+    // Kembalikan ke semula setelah 5 detik
+    setTimeout(()=>{
+      btn.classList.remove('btn-danger');
+      btn.classList.add('btn-primary');
+      btn.style.cssText = '';
+      btn.innerHTML = ORIG_TEXT;
+    }, 5000);
+  }
+
+  function applyCoords(lat, lng){
+    document.getElementById('latitude').value  = lat;
+    document.getElementById('longitude').value = lng;
+    saveFormData();
+    setSuccess(lat, lng);
+  }
+
+  // Coba IP-based fallback jika geolocation gagal/ditolak
+  function tryIPFallback(){
+    fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(5000) })
+      .then(r=>{ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+      .then(data=>{
+        if(data.latitude && data.longitude){
+          const lat = parseFloat(data.latitude).toFixed(6);
+          const lng = parseFloat(data.longitude).toFixed(6);
+          applyCoords(lat, lng);
+          // Tambahkan keterangan bahwa ini perkiraan
+          document.getElementById('latitude').value  = lat + ' (perkiraan)';
+          document.getElementById('longitude').value = lng + ' (perkiraan)';
+        } else {
+          setError('Izin ditolak — aktifkan lokasi');
+        }
+      })
+      .catch(()=>{ setError('Izin ditolak — aktifkan lokasi'); });
+  }
+
+  btn.addEventListener('click', ()=>{
+    // Cek HTTPS atau localhost (syarat geolocation modern browser)
+    const isSecure = location.protocol === 'https:' ||
+                     location.hostname === 'localhost' ||
+                     location.hostname === '127.0.0.1' ||
+                     location.hostname === '';  // file:// protocol (Android WebView)
+
+    if(!navigator.geolocation){
+      setError('Tidak didukung browser ini');
+      return;
+    }
+
+    setLoading();
+
+    // Opsi 1: High accuracy (GPS)
+    const optHigh = { enableHighAccuracy:true,  timeout:10000, maximumAge:0 };
+    // Opsi 2: Low accuracy fallback (network/wifi) jika GPS gagal
+    const optLow  = { enableHighAccuracy:false, timeout:8000,  maximumAge:60000 };
+
+    function onSuccess(pos){
+      const lat = pos.coords.latitude.toFixed(6);
+      const lng = pos.coords.longitude.toFixed(6);
+      applyCoords(lat, lng);
+    }
+
+    function onErrorHigh(err){
+      // GPS gagal → coba low accuracy
+      navigator.geolocation.getCurrentPosition(
+        onSuccess,
+        onErrorLow,
+        optLow
+      );
+    }
+
+    function onErrorLow(err){
+      // Semua metode GPS gagal
+      let msg;
+      switch(err.code){
+        case 1: // PERMISSION_DENIED
+          tryIPFallback();
+          return;
+        case 2: // POSITION_UNAVAILABLE
+          msg = 'Sinyal lokasi tidak tersedia';
+          break;
+        case 3: // TIMEOUT
+          msg = 'Waktu habis — coba lagi';
+          break;
+        default:
+          msg = 'Gagal — coba lagi';
+      }
+      setError(msg);
+    }
+
+    navigator.geolocation.getCurrentPosition(onSuccess, onErrorHigh, optHigh);
   });
 }
 
