@@ -1159,8 +1159,122 @@ textarea.field-input { resize:vertical; min-height:90px; }
 .stat-count.sev-2 { color: var(--score-2); }
 .stat-count.sev-3 { color: var(--score-3); }
 
+/* ── MODAL VALIDASI (Fitur 5) ── */
+#validation-modal .modal-icon { background: var(--accent-light); }
+#validation-modal .modal-icon svg { color: var(--accent); }
+#validation-list {
+  text-align: left;
+  margin: 0 0 20px;
+  padding: 0;
+  list-style: none;
+  max-height: 200px;
+  overflow-y: auto;
+}
+#validation-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 6px 10px;
+  margin-bottom: 4px;
+  border-radius: var(--r-sm);
+  font-size: 12px;
+  color: var(--text-secondary);
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+}
+#validation-list li::before {
+  content: '!';
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+#validation-list li.err::before {
+  background: var(--danger);
+  content: '✕';
+}
+.validation-section-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--text-muted);
+  margin: 10px 0 4px;
+  padding: 0 2px;
+}
+
+/* ── TANDA TANGAN DIGITAL (Fitur 6) ── */
+.sign-canvas-wrap {
+  position: relative;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  border: 1.5px solid var(--border);
+  background: var(--surface-alt);
+  transition: border-color var(--dur-fast);
+  touch-action: none; /* penting: cegah scroll saat menggambar */
+}
+.sign-canvas-wrap:focus-within,
+.sign-canvas-wrap.active { border-color: var(--brand); }
+.sign-canvas-wrap canvas {
+  display: block;
+  width: 100%;
+  height: 110px;
+  cursor: crosshair;
+  touch-action: none;
+}
+.sign-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 8px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+}
+.sign-toolbar-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+.sign-clear-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: var(--r-full);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--danger);
+  background: var(--danger-light);
+  border: 1px solid var(--danger);
+  cursor: pointer;
+  transition: all var(--dur-fast);
+}
+.sign-clear-btn:hover { background: var(--danger); color: white; }
+.sign-clear-btn svg { width: 12px; height: 12px; }
+.sign-status {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: var(--r-full);
+  display: inline-block;
+}
+.sign-status.empty { color: var(--text-muted); background: var(--surface-alt); }
+.sign-status.signed { color: var(--brand); background: var(--brand-light); }
+[data-theme="dark"] .sign-canvas-wrap { background: var(--surface); }
+[data-theme="dark"] .sign-canvas-wrap canvas { background: var(--surface); }
+
 @media print {
   #fixed-score-bar, #bar-toggle, #theme-toggle { display:none!important; }
+  .sign-canvas-wrap canvas { display:block!important; }
+  .sign-toolbar { display:none!important; }
   body { padding-bottom:0!important; background:white!important; color:black!important; }
   #app-wrapper { padding:0!important; }
   .section-card { box-shadow:none!important; border:1px solid #ccc!important; break-inside:avoid; }
@@ -1522,13 +1636,31 @@ textarea.field-input { resize:vertical; min-height:90px; }
         <div class="form-grid">
           <div>
             <div class="field-label" style="margin-bottom:6px">Petugas Pemeriksa</div>
-            <input type="text" id="ttd_pemeriksa_nama" class="field-input" placeholder="Nama lengkap" style="margin-bottom:12px">
-            <div class="sign-area"><span>Tanda tangan</span></div>
+            <input type="text" id="ttd_pemeriksa_nama" class="field-input" placeholder="Nama lengkap" style="margin-bottom:10px">
+            <div class="sign-canvas-wrap" id="wrap-sign-pemeriksa">
+              <canvas id="sign-pemeriksa" data-signed="false" aria-label="Area tanda tangan pemeriksa"></canvas>
+              <div class="sign-toolbar">
+                <span class="sign-status empty" id="status-sign-pemeriksa">Belum ditandatangani</span>
+                <button class="sign-clear-btn" onclick="clearSignature('sign-pemeriksa')" type="button" aria-label="Hapus tanda tangan pemeriksa">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+                  Hapus
+                </button>
+              </div>
+            </div>
           </div>
           <div>
             <div class="field-label" style="margin-bottom:6px">Pengelola SPPG</div>
-            <input type="text" id="ttd_pengelola_nama" class="field-input" placeholder="Nama lengkap" style="margin-bottom:12px">
-            <div class="sign-area"><span>Tanda tangan</span></div>
+            <input type="text" id="ttd_pengelola_nama" class="field-input" placeholder="Nama lengkap" style="margin-bottom:10px">
+            <div class="sign-canvas-wrap" id="wrap-sign-pengelola">
+              <canvas id="sign-pengelola" data-signed="false" aria-label="Area tanda tangan pengelola"></canvas>
+              <div class="sign-toolbar">
+                <span class="sign-status empty" id="status-sign-pengelola">Belum ditandatangani</span>
+                <button class="sign-clear-btn" onclick="clearSignature('sign-pengelola')" type="button" aria-label="Hapus tanda tangan pengelola">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+                  Hapus
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -1593,6 +1725,25 @@ textarea.field-input { resize:vertical; min-height:90px; }
     <div class="modal-actions">
       <button id="pdf-cancel-btn" class="btn btn-outline" style="flex:1">Batal</button>
       <button id="pdf-confirm-btn" class="btn btn-primary" style="flex:1">Lanjutkan</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL VALIDASI (Fitur 5) ══ -->
+<div class="modal-overlay" id="validation-modal" role="dialog" aria-modal="true" aria-labelledby="val-modal-title">
+  <div class="modal-box">
+    <div class="modal-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+        <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+      </svg>
+    </div>
+    <div class="modal-title" id="val-modal-title">Formulir Belum Lengkap</div>
+    <div class="modal-desc" id="val-modal-desc">Beberapa data penting belum diisi:</div>
+    <ul id="validation-list"></ul>
+    <div class="modal-actions">
+      <button id="val-cancel-btn" class="btn btn-outline" style="flex:1">Lengkapi Dulu</button>
+      <button id="val-proceed-btn" class="btn btn-primary" style="flex:1">Tetap Unduh</button>
     </div>
   </div>
 </div>
@@ -2508,6 +2659,8 @@ function getVal(id){ const e=document.getElementById(id); return e?e.value||'-':
 function getRadio(name){ const e=document.querySelector(`input[name="${name}"]:checked`); return e?e.value:'-'; }
 
 function buildReportHTML(){
+  const signPemeriksa = getSignatureDataURL('sign-pemeriksa');
+  const signPengelola = getSignatureDataURL('sign-pengelola');
   const iklScore=document.getElementById('final-ikl-score').textContent;
   const iklStatus=document.getElementById('ikl-status').textContent;
 
@@ -2589,15 +2742,300 @@ function buildReportHTML(){
   </tbody></table>
   <br>
   <table class="nb"><tr class="nb">
-    <td style="width:50%;text-align:center">Mengetahui,<br>Pengelola SPPG<br><br><br><br>
-      <span style="text-decoration:underline;font-weight:700">${getVal('ttd_pengelola_nama')}</span></td>
-    <td style="width:50%;text-align:center">Petugas Pemeriksa,<br>${getVal('tanggal_pemeriksaan')}<br><br><br><br>
-      <span style="text-decoration:underline;font-weight:700">${getVal('ttd_pemeriksa_nama')}</span></td>
+    <td style="width:50%;text-align:center;vertical-align:top;padding-right:12px">
+      Mengetahui,<br>Pengelola SPPG<br>
+      ${signPengelola ? '<img src="' + signPengelola + '" style="max-width:180px;height:80px;object-fit:contain;display:block;margin:4px auto;" alt="Tanda tangan pengelola">' : '<div style="height:80px;border-bottom:1px solid #999;margin:4px 0;"></div>'}
+      <span style="text-decoration:underline;font-weight:700">${getVal('ttd_pengelola_nama')}</span>
+    </td>
+    <td style="width:50%;text-align:center;vertical-align:top;padding-left:12px">
+      Petugas Pemeriksa,<br>${getVal('tanggal_pemeriksaan')}<br>
+      ${signPemeriksa ? '<img src="' + signPemeriksa + '" style="max-width:180px;height:80px;object-fit:contain;display:block;margin:4px auto;" alt="Tanda tangan pemeriksa">' : '<div style="height:80px;border-bottom:1px solid #999;margin:4px 0;"></div>'}
+      <span style="text-decoration:underline;font-weight:700">${getVal('ttd_pemeriksa_nama')}</span>
+    </td>
   </tr></table>
   </body></html>`;
 }
 
+
+
+// ══════════════════════════════════════════════════════════════
+// FITUR 6: TANDA TANGAN DIGITAL
+// ══════════════════════════════════════════════════════════════
+function setupSignatures(){
+  ['sign-pemeriksa','sign-pengelola'].forEach(id => initSignatureCanvas(id));
+}
+
+function initSignatureCanvas(id){
+  const canvas = document.getElementById(id);
+  if(!canvas) return;
+  const wrap   = canvas.closest('.sign-canvas-wrap');
+  const status = document.getElementById('status-' + id);
+
+  // Set resolusi canvas (2x untuk retina)
+  function resizeCanvas(){
+    const rect = canvas.getBoundingClientRect();
+    const dpr  = window.devicePixelRatio || 1;
+    const w    = rect.width  || canvas.offsetWidth  || 280;
+    const h    = rect.height || canvas.offsetHeight || 110;
+    // Simpan gambar sebelum resize
+    const imgData = canvas.dataset.signed === 'true'
+      ? canvas.toDataURL() : null;
+    canvas.width  = w * dpr;
+    canvas.height = h * dpr;
+    const ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+    ctx.strokeStyle = getComputedStyle(document.documentElement)
+      .getPropertyValue('--text-primary').trim() || '#111';
+    ctx.lineWidth   = 2;
+    ctx.lineCap     = 'round';
+    ctx.lineJoin    = 'round';
+    // Restore gambar
+    if(imgData){
+      const img = new Image();
+      img.onload = () => ctx.drawImage(img, 0, 0, w, h);
+      img.src = imgData;
+    }
+  }
+
+  resizeCanvas();
+
+  // Restore dari localStorage jika ada
+  const savedKey = 'ikl_sign_' + id;
+  const saved = localStorage.getItem(savedKey);
+  if(saved){
+    const img = new Image();
+    img.onload = ()=>{
+      const ctx = canvas.getContext('2d');
+      const dpr = window.devicePixelRatio || 1;
+      ctx.drawImage(img, 0, 0, canvas.offsetWidth, canvas.offsetHeight);
+    };
+    img.src = saved;
+    canvas.dataset.signed = 'true';
+    if(status){ status.textContent = 'Sudah ditandatangani ✓'; status.className = 'sign-status signed'; }
+    if(wrap) wrap.classList.add('active');
+  }
+
+  const ctx = canvas.getContext('2d');
+  let drawing   = false;
+  let lastX     = 0;
+  let lastY     = 0;
+  let hasMoved  = false;
+
+  function getPos(e, canvas){
+    const rect = canvas.getBoundingClientRect();
+    if(e.touches){
+      return { x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top };
+    }
+    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+  }
+
+  function startDraw(e){
+    e.preventDefault();
+    drawing  = true;
+    hasMoved = false;
+    const pos = getPos(e, canvas);
+    lastX = pos.x; lastY = pos.y;
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    if(wrap) wrap.classList.add('active');
+  }
+
+  function draw(e){
+    if(!drawing) return;
+    e.preventDefault();
+    const pos = getPos(e, canvas);
+    ctx.lineTo(pos.x, pos.y);
+    ctx.stroke();
+    lastX = pos.x; lastY = pos.y;
+    hasMoved = true;
+  }
+
+  function endDraw(e){
+    if(!drawing) return;
+    drawing = false;
+    // Titik (klik tanpa gerak) → gambar titik kecil
+    if(!hasMoved){
+      ctx.beginPath();
+      ctx.arc(lastX, lastY, 1.5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    // Tandai signed dan simpan
+    canvas.dataset.signed = 'true';
+    if(status){ status.textContent = 'Sudah ditandatangani ✓'; status.className = 'sign-status signed'; }
+    // Simpan ke localStorage (debounced)
+    clearTimeout(canvas._saveTimer);
+    canvas._saveTimer = setTimeout(()=>{
+      try { localStorage.setItem(savedKey, canvas.toDataURL('image/png', 0.7)); }
+      catch(e){ console.warn('Sign save error:', e); }
+    }, 500);
+  }
+
+  // Mouse events
+  canvas.addEventListener('mousedown',  startDraw, { passive:false });
+  canvas.addEventListener('mousemove',  draw,      { passive:false });
+  canvas.addEventListener('mouseup',    endDraw);
+  canvas.addEventListener('mouseleave', endDraw);
+
+  // Touch events
+  canvas.addEventListener('touchstart', startDraw, { passive:false });
+  canvas.addEventListener('touchmove',  draw,      { passive:false });
+  canvas.addEventListener('touchend',   endDraw,   { passive:false });
+
+  // Pointer events (paling kompatibel untuk stylus & touch)
+  canvas.addEventListener('pointerdown', e=>{ canvas.setPointerCapture(e.pointerId); startDraw(e); }, { passive:false });
+  canvas.addEventListener('pointermove', draw,    { passive:false });
+  canvas.addEventListener('pointerup',   endDraw, { passive:false });
+  canvas.addEventListener('pointercancel', endDraw);
+
+  // Resize observer
+  if(typeof ResizeObserver !== 'undefined'){
+    new ResizeObserver(resizeCanvas).observe(canvas.parentElement);
+  }
+}
+
+function clearSignature(id){
+  const canvas = document.getElementById(id);
+  if(!canvas) return;
+  const ctx    = canvas.getContext('2d');
+  const dpr    = window.devicePixelRatio || 1;
+  ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
+  canvas.dataset.signed = 'false';
+  const status = document.getElementById('status-' + id);
+  if(status){ status.textContent = 'Belum ditandatangani'; status.className = 'sign-status empty'; }
+  const wrap = canvas.closest('.sign-canvas-wrap');
+  if(wrap) wrap.classList.remove('active');
+  try { localStorage.removeItem('ikl_sign_' + id); } catch(e){}
+}
+
+// Ambil data tanda tangan sebagai base64 (untuk PDF)
+function getSignatureDataURL(id){
+  const canvas = document.getElementById(id);
+  if(!canvas || canvas.dataset.signed !== 'true') return null;
+  try { return canvas.toDataURL('image/png', 0.8); } catch(e){ return null; }
+}
+
+// ══════════════════════════════════════════════════════════════
+// FITUR 5: VALIDASI SEBELUM EXPORT PDF
+// ══════════════════════════════════════════════════════════════
+function validateBeforeExport(){
+  const missing = [];
+
+  // Data Umum wajib
+  const required = [
+    { id:'nama_sppg',           label:'Nama SPPG' },
+    { id:'alamat_sppg',         label:'Alamat SPPG' },
+    { id:'nama_pengelola',      label:'Nama Pengelola' },
+    { id:'tanggal_pemeriksaan', label:'Tanggal Pemeriksaan' },
+    { id:'nama_pemeriksa',      label:'Nama Pemeriksa' },
+  ];
+  required.forEach(f=>{
+    const el = document.getElementById(f.id);
+    if(!el || !el.value.trim()) missing.push({ label: f.label, type:'required' });
+  });
+
+  // Cek apakah ada kriteria yang belum diisi (masih semua NA di semua area)
+  let allNACriteria = 0;
+  CRITERIA.forEach(crit=>{
+    if(crit.isHeader) return;
+    // Cek apakah kriteria ini punya area aktif (bukan semua NA)
+    const hasActiveArea = Object.values(crit.areas).some(v => v !== 'NA');
+    if(!hasActiveArea) return; // semua NA memang, skip
+    // Cek apakah user sudah memberi nilai (nilai > 0 atau eksplisit memilih NA)
+    // Karena default adalah NA (0), kita tidak bisa tahu apakah user memang pilih NA
+    // Jadi hanya validasi field wajib saja untuk sekarang
+  });
+
+  // Tanda tangan — cek apakah canvas masih kosong
+  ['sign-pemeriksa','sign-pengelola'].forEach(id=>{
+    const canvas = document.getElementById(id);
+    if(!canvas) return;
+    if(canvas.dataset.signed !== 'true'){
+      const label = id === 'sign-pemeriksa' ? 'Tanda tangan Pemeriksa' : 'Tanda tangan Pengelola';
+      missing.push({ label, type:'warning' });
+    }
+  });
+
+  return missing;
+}
+
+function showValidationModal(missing, onProceed){
+  const list = document.getElementById('validation-list');
+  const desc = document.getElementById('val-modal-desc');
+  list.innerHTML = '';
+
+  const errors   = missing.filter(m=>m.type==='required');
+  const warnings = missing.filter(m=>m.type==='warning');
+
+  if(errors.length > 0){
+    const lbl = document.createElement('div');
+    lbl.className = 'validation-section-label';
+    lbl.textContent = 'Data wajib belum diisi:';
+    list.appendChild(lbl);
+    errors.forEach(m=>{
+      const li = document.createElement('li');
+      li.className = 'err';
+      li.textContent = m.label;
+      list.appendChild(li);
+    });
+  }
+  if(warnings.length > 0){
+    const lbl = document.createElement('div');
+    lbl.className = 'validation-section-label';
+    lbl.textContent = 'Disarankan dilengkapi:';
+    list.appendChild(lbl);
+    warnings.forEach(m=>{
+      const li = document.createElement('li');
+      li.textContent = m.label;
+      list.appendChild(li);
+    });
+  }
+
+  const totalMissing = missing.length;
+  desc.textContent = totalMissing === 1
+    ? '1 item belum dilengkapi:'
+    : totalMissing + ' item belum dilengkapi:';
+
+  const modal = document.getElementById('validation-modal');
+  modal.classList.add('active');
+
+  const cancelBtn  = document.getElementById('val-cancel-btn');
+  const proceedBtn = document.getElementById('val-proceed-btn');
+
+  // Label tombol sesuai severity
+  if(errors.length > 0){
+    proceedBtn.textContent = 'Tetap Unduh';
+    proceedBtn.className   = 'btn btn-danger';
+  } else {
+    proceedBtn.textContent = 'Ya, Unduh';
+    proceedBtn.className   = 'btn btn-primary';
+  }
+
+  // Hapus listener lama
+  const newCancel  = cancelBtn.cloneNode(true);
+  const newProceed = proceedBtn.cloneNode(true);
+  cancelBtn.parentNode.replaceChild(newCancel, cancelBtn);
+  proceedBtn.parentNode.replaceChild(newProceed, proceedBtn);
+
+  document.getElementById('val-cancel-btn').addEventListener('click', ()=>{
+    modal.classList.remove('active');
+  });
+  document.getElementById('val-proceed-btn').addEventListener('click', ()=>{
+    modal.classList.remove('active');
+    onProceed();
+  });
+}
+
 function exportPDF(){
+  // Validasi kelengkapan form sebelum export
+  const missing = validateBeforeExport();
+  if(missing.length > 0){
+    showValidationModal(missing, ()=>{ doExportPDF(); });
+    return;
+  }
+  doExportPDF();
+}
+
+function doExportPDF(){
   const html=buildReportHTML();
   const btn=document.getElementById('export-pdf-btn');
   const orig=btn.innerHTML;
@@ -2804,6 +3242,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 
   // Geolocation
   setupGeolocation();
+  setupSignatures();
 
   // PDF modal
   document.getElementById('export-pdf-btn').addEventListener('click',()=>document.getElementById('pdf-modal').classList.add('active'));
